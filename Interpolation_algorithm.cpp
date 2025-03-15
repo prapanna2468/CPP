@@ -1,77 +1,74 @@
 #include <iostream>
 #include <vector>
-#include <chrono> // For measuring runtime
-#include <cstdlib> // For rand() and srand()
-#include <ctime> // For seeding rand()
+#include <algorithm>
+#include <cstdlib>
+#include <ctime>
 
 using namespace std;
-using namespace std::chrono;
 
-// Function to generate random sorted array
-vector<int> generateSortedArray(int size) {
-    vector<int> arr(size);
-    srand(time(0));
-    arr[0] = rand() % 10; // First element
-    for (int i = 1; i < size; i++) {
-        arr[i] = arr[i - 1] + (rand() % 10 + 1); // Ensure ascending order
-    }
-    return arr;
-}
-
-// Interpolation Search algorithm
-int interpolationSearch(vector<int>& arr, int key) {
-    int low = 0;
-    int high = arr.size() - 1;
-
+// Interpolation search function
+int interpolationSearch(const vector<int>& arr, int key) {
+    int low = 0, high = arr.size() - 1;
+    
     while (low <= high && key >= arr[low] && key <= arr[high]) {
-        if (low == high) {
+        // Avoid division by zero
+        if (arr[low] == arr[high]) {
             if (arr[low] == key) return low;
-            return -1;
+            else return -1;
         }
-
-        // Interpolation formula
+        
+        // Probing position formula
         int pos = low + (((double)(high - low) / (arr[high] - arr[low])) * (key - arr[low]));
 
-        if (arr[pos] == key) return pos;
-        if (arr[pos] < key) low = pos + 1;
-        else high = pos - 1;
+        // If found
+        if (arr[pos] == key)
+            return pos;
+
+        // If key is larger, move right
+        if (arr[pos] < key)
+            low = pos + 1;
+        else  // Move left
+            high = pos - 1;
     }
-    return -1; // Key not found
-}
-
-// Function to measure runtime and perform search
-void runInterpolationSearch(int size, int key) {
-    vector<int> arr = generateSortedArray(size);
-
-    cout << "\nGenerated Sorted Array (Size " << size << "): ";
-    for (int i = 0; i < size; i++) {
-        cout << arr[i] << " ";
-    }
-    cout << "\nSearching for: " << key << endl;
-
-    auto start = high_resolution_clock::now(); // Start time
-    int result = interpolationSearch(arr, key);
-    auto stop = high_resolution_clock::now(); // End time
-    auto duration = duration_cast<microseconds>(stop - start); // Runtime in microseconds
-
-    if (result != -1)
-        cout << "Element found at index: " << result << endl;
-    else
-        cout << "Element not found!" << endl;
-
-    cout << "Actual Runtime: " << duration.count() << " microseconds" << endl;
+    return -1; // Not found
 }
 
 int main() {
-    int key;
-    cout << "Enter the element to search: ";
-    cin >> key;
+    srand(time(0));
+    
+    int N;
+    cout << "Enter the number of random integers: ";
+    cin >> N;
 
-    // Test with multiple input sizes
-    int sizes[] = {10, 50, 100, 500, 1000};
-    for (int size : sizes) {
-        runInterpolationSearch(size, key);
+    vector<int> numbers(N);
+
+    // Generate random numbers
+    cout << "Generated numbers: ";
+    for (int i = 0; i < N; i++) {
+        numbers[i] = rand() % 100; // Numbers between 0 and 99
+        cout << numbers[i] << " ";
     }
+    cout << endl;
+
+    // Sorting the numbers
+    sort(numbers.begin(), numbers.end());
+    cout << "Sorted numbers: ";
+    for (int num : numbers) {
+        cout << num << " ";
+    }
+    cout << endl;
+
+    // Searching for an element
+    int searchKey;
+    cout << "Enter a number to search: ";
+    cin >> searchKey;
+
+    int index = interpolationSearch(numbers, searchKey);
+    if (index != -1)
+        cout << "Element found at index: " << index << endl;
+    else
+        cout << "Element not found!" << endl;
 
     return 0;
 }
+
