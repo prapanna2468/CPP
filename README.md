@@ -34,23 +34,6 @@ Description: A simple sorting algorithm that repeatedly selects the minimum elem
 
 Time Complexity: O(n²)
 
-How to Run
-Clone the repository:
-
-bash
-Copy
-Edit
-git clone https://github.com/yourusername/your-repo-name.git
-cd your-repo-name
-Compile and run the desired C++ file:
-
-bash
-Copy
-Edit
-g++ Binary_search_algorithm.cpp -o binary_search
-./binary_search
-(Replace Binary_search_algorithm.cpp with the file you want to run)
-
 Purpose
 Practice and understanding of classic searching and sorting algorithms
 
